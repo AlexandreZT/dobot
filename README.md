@@ -15,6 +15,6 @@ module : pyautogui
 
 ## dobot_marchand.py (en cours)
 
-Script qui permet de se mettre en mode marchand dès quele script détecte qu'une personne s'est retiré de son mode marchand
+Script qui permet de se mettre en mode marchand dès que le script détecte qu'une personne s'est retiré de son mode marchand
 
 module : pyautogui, figlet
