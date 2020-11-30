@@ -1,0 +1,4 @@
+richesse = eau (pp) => drop mob / récolte
+feu => farm / xp (combat rapide)
+sagesse => xp
+terre => pods récolte
