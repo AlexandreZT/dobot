@@ -10,6 +10,7 @@ class mine(object):
         return self.mine_position
 
     def getOreList(self, level):
+        # Les minerais doivent être trié par ordre de prix décroissant
         if level ==200:
             OreList=["Écume de mer", "Obsidienne", "Dolomite", "Or", "Bauxite", "Argent", "Silicate", "Etain", "Manganèse", "Kobalte", "Bronze", "Cuivre", "Fer"]
 
@@ -47,6 +48,11 @@ class mine(object):
     def miner(self):
         print("Je ne connais pas encore cette mine")
 
+    def combattre(self):
+        pass
+        # (0, 0, 0)
+        # (154, 144, 85)
+        # (164, 154, 94)
     def can_recolt(self): # peut-être résolvable avec un time.sleep()
         fuck = True
         while fuck:
@@ -67,17 +73,12 @@ class mine(object):
                 fuck = False
             except:
                 pass
-    
-    def bank(self):
-        pass
-
-    def changer_mine(self):
-        pass
 
     def decision(self, pos, empty_color):
         pyautogui.click(pos[0], pos[1])
+        # mine.make_decision() # Sert à vérifier le code couleur de la ressource
         if empty_color != mine.can_recolt():
-            time.sleep(uniform(9, 10)) # temps pour déplacement et recolte
+            time.sleep(uniform(9, 10)) # temps pour déplacement et recolte # breakpoint permet aussi de voir où ça bug
             loop=False
     
     def make_decision(self):
@@ -95,28 +96,13 @@ class mine(object):
                 loop =  False
             except:
                 pass
-
-class astrub_centre_ville(mine):
-    def __init__(self):
-        self.mine_position = [1, -17]
-        self.path = [
-            
-        ]
-
-class astrub_souterrains_profonds(mine):
-    def __init__(self):
-        self.mine_position = [5, -17]
-        self.path = [
-            
-        ]
-
 class astrub(mine):
     def __init__(self):
         self.mine_position = [10, -19]
         self.path = [
             [1340, 370], # entrer dans la mine
             [1470, 250], # nouvelle salle
-            [1617, 389], # salle à droite (todo 2 cuivre)
+            [1617, 389], # salle à droite
             [335, 805], # retour à gauche
             [1043, 168], # je monte
             [725, 137], # je monte
@@ -182,10 +168,13 @@ class astrub(mine):
     def miner(self):
         for room in self.path: # pour chaque pièce
             self.mouvement(room) # changement de pièce
-            # mine.make_decision()
+            # mine.make_decision() # Sert pour recupérer des infos pour vérifier si la pièce à changé
             for Ore in mine.getOreList(metier_level): # pour toutes les ressouces récoltables (par ordre de niveau)
                 if Ore in self.availableOre: # les récolter par priorité
                     astrub.take_resources(room, Ore) # clique pour récolter
+                    
+            if room == [261, 979]:
+                astrub.check_pods()
 
     def mouvement(self, room):
         pyautogui.click(room) # clique pour bouger
@@ -204,13 +193,23 @@ class astrub(mine):
         time.sleep(uniform(8, 9)) # temps pour changer de pièce
 
     def check_pods(self):
-        pass
+        pyautogui.click(1224, 1071)
+        check = True
+        while check:
+            try:
+                if pyautogui.pixel(1224, 1071) == (96, 190, 53):
+                    self.go_bank()
+                check = False
+            except:
+                pass
+            
 
     def go_bank(self):
-        pass
+        print("ressources déposé")
+        self.back_mine_hable()
 
     def back_mine_hable(self):
-        pass
+        print("me revoilà")
 
     def take_resources(self, room, Ore):
         """
@@ -233,12 +232,9 @@ class astrub(mine):
         Sinon (autre pixel) alors je peux next ou attendre qu'il se déplace # quelque chose bloque l'accès (attention combat ou joueur)
         S'il y a plusieurs room, c'est pcq parfois il revient sur ses pas durant sa tournée
         """
-        if room == [475, 435] or room == [1568, 257]:
+        if room == [1568, 257]:
             mine.decision((721, 93), (187, 182, 137))
             mine.decision((752, 130), (163, 158, 118))
-
-        elif room == [482, 303]:
-            pass
 
         elif room == [1340, 370] or room == [365, 851]:
             mine.decision((661, 460), (63, 50, 18))
@@ -248,9 +244,9 @@ class astrub(mine):
 
         elif room == [1617, 389]:
             pass
-        elif room == [1043, 168]:
-            mine.decision((775, 750), (84, 69, 32))
-            mine.decision((1239, 579), (35, 28, 13))
+        elif room == [1043, 168] or room == [1623, 903]:
+            mine.decision((763, 754), (157, 134, 63))
+            mine.decision((1233, 591), (34, 26, 11))
         elif room == [300, 715]:
             pass
         elif room == [1288, 37] or room == [795, 945]:
@@ -258,6 +254,7 @@ class astrub(mine):
             mine.decision((1175, 560), (96, 87, 55))
             mine.decision((538, 395),(115, 113, 80))
             mine.decision((1060, 229), (86, 77, 49))
+            mine.decision((1108, 188), (72, 73, 55))
         elif room == [1763, 540]:
             pass
         elif room == [1457, 949] or room == [795, 945]:
@@ -267,6 +264,7 @@ class astrub(mine):
             mine.decision((616, 267), (204, 198, 144))
             mine.decision((665, 294), (122, 120, 88))
             mine.decision((714, 309), (182, 179, 126))
+            mine.decision((731, 574), (114, 110, 86))
         elif room == [1646, 531]:
             mine.decision((1296, 385), (113, 107, 86))
             mine.decision((1546, 453), (199, 190, 140))
@@ -280,23 +278,93 @@ class astrub(mine):
             mine.decision((1306, 443) , (70, 57, 1))
         elif room == [1604, 295] or room == [380, 293]:
             mine.decision((506, 424), (95, 77, 37))
-            mine.decision((646, 335) ,  (43, 35, 19))
-            mine.decision((937, 195), (13, 10, 5))
-            mine.decision((1270, 159) ,  (15, 18, 6))
+            mine.decision((646, 335), (43, 35, 19))
+            mine.decision((925, 145), (10, 8, 4)) # refait
+            mine.decision((1167, 237), (40, 33, 0)) # refait
+            mine.decision((1270, 159), (15, 18, 6))
             mine.decision((1421, 311), (25, 27, 4))
             mine.decision((1091, 524), (67, 56, 0))
         elif room == [1518, 689]:
             mine.decision((1009, 183), (57, 43, 11))
-            mine.decision((674, 502), (12, 9, 2))
+            mine.decision((674, 502), (12, 9, 2)) 
+            mine.decision((919, 450), (102, 96, 4))
+            
 
     def take_cuivre(self, room):
-        print("tu ne peux pas miner le cuivre")
-    
+        if room == [1340, 370] or room == [365, 851]:
+            mine.decision((340, 543), (151, 122, 39))
+            mine.decision((608, 474), (72, 57, 20))
+        elif room == [1470, 250] or room == [597, 945] or room == [335, 805]:
+            mine.decision((800, 602), (63, 52, 24))
+        elif room == [1617, 389]:
+            mine.decision((926, 155), (88, 66, 20))
+            mine.decision((866, 133), (95, 78, 38))
+        elif room == [1043, 168] or room == [1623, 903]:
+            mine.decision((1163, 297), (68, 58, 30))
+            mine.decision((1171, 596), (33, 26, 12))
+        elif room == [725, 137]:
+            mine.decision((1028, 337), (157, 136, 70))
+            mine.decision((1080, 351), (147, 128, 64))
+            
+        elif room == [300, 715] or room == [482, 303]:
+            mine.decision((633, 499), (158, 149, 111))
+            mine.decision((672, 512), (159, 153, 115))
+
+        elif room == [1288, 37] or room == [795, 945]:
+            mine.decision((596, 374), (124, 124, 90))
+            mine.decision((1161, 178), (85, 85, 63))
+        elif room == [1648, 422]:
+            mine.decision((519, 278), (136, 134, 98))
+            mine.decision((757, 342), (191, 182, 132))
+        elif room == [1646, 531]:
+            mine.decision((1499, 433), (198, 189, 141))
+        
+        elif room == [1152, 567] or room == [336, 844]:
+            mine.decision((479, 646), (42, 34, 17))
+            mine.decision((978, 362), (35, 30, 14))
+        elif room == [1604, 295] or room == [380, 293]:
+            mine.decision((464, 409), (90, 71, 36))
+        elif room == [1518, 689]:
+            mine.decision((1047, 260), (44, 35, 14))
+            mine.decision((1291, 384), (45, 35, 11))
+        elif room == [1728, 247]:
+            mine.decision((1407, 420) ,  (87, 86, 63))
+            mine.decision((1142, 284), (80, 76, 58))
+            mine.decision((1092, 308), (80, 75, 59))
+            
     def take_bronze(self, room):
-        print("tu ne peux pas miner le bronze")
+        if room == [1340, 370] or room == [365, 851]:
+            mine.decision((1483, 662), (50, 40, 17))
+        elif room == [1470, 250] or room == [597, 945] or room == [335, 805]:
+            mine.decision((618, 353), (92, 83, 40))
+            mine.decision((673, 326), (79, 60, 17))
+        elif room == [1288, 37] or room == [795, 945]:
+            mine.decision((998, 234), (87, 86, 68))
+        elif room == [1648, 422]:
+            mine.decision((1063, 756), (160, 156, 122))
+            mine.decision((1108, 776), (168, 164, 121))
+        elif room == [1646, 531]:
+            mine.decision((1085, 571), (191, 182, 140))
+        elif room == [1152, 567] or room == [336, 844]:
+            mine.decision((1127, 231), (22, 18, 9))
+        elif room == [1604, 295] or room == [380, 293]:
+            mine.decision((607, 403), (63, 48, 26))
+            mine.decision((1161, 495), (31, 28, 0))
+        elif room == [1728, 247]:
+            mine.decision((646, 417), (113, 110, 78))
+            mine.decision((682, 398), (120, 118, 85))
+            mine.decision((731, 364), (110, 107, 76))
+        elif room == [1568, 257]:
+            mine.decision((819, 127), (173, 164, 123))
+            mine.decision((862, 147), (148, 140, 104)) 
+            mine.decision((905, 165), (165, 157, 115))
 
     def take_kobalte(self, room):
-        print("tu ne peux pas miner le kobalte")
+        if room == [300, 715] or room == [482, 303]:
+            mine.decision((875, 401) ,  (60, 62, 46))
+
+        elif room == [1648, 422]:
+            mine.decision((1404, 803), (92, 90, 69))
 
 class combat(object):
     """
@@ -322,7 +390,7 @@ class attrapé(object):
 if __name__ == "__main__":
     developing = False
     if developing == True:
-        mine = mine()
+        mine = mine()        
         while developing:
             mine.make_decision()
 
