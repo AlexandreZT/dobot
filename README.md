@@ -13,5 +13,7 @@ D'autres mines pourront seront peut-être développé.
 
 module : pyautogui
 
-PS : le passage à la banque est encore à faire
-PS : Une version plus rapide (et donc plus intelligente) est prévu
+TODO :
+• Le passage à la banque est encore à faire
+• Une version plus rapide (et donc plus intelligente) en évitantles time.sleep()
+• Gestion des combats

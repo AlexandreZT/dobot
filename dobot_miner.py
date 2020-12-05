@@ -1,7 +1,108 @@
 import pyautogui
 import time
 from random import randint, uniform
+class combat(object):
+    """
+    Le script doit être au moins capable de gérer les combats contre les protecteurs de ressources.
+    Pour détecter s'il est en combat, il se réfère au pixel de couleur du mode combat.
+    """
+    def find_enemies(self):
+        """
+        Parcours toutes les cases du jeu à la recherche de : (46, 54, 61) => couleur ennemie en mode créature
+        """
+        for y in range (50, 965, 45):
+            for x in range (345, 1530, 91): 
+                test = True
+                while test:
+                    try:
+                        pyautogui.click(x+45, y-22)
+                        color = pyautogui.pixel(x+45, y-22)
+                        test = False
+                    except:
+                        pass
+                if color == (46, 54, 61):
+                    print("got ya")
+                    return x+45, y-22
+            for x in range (345, 1530, 91):
+                test = True
+                while test:
+                    try:
+                        pyautogui.click(x, y)
+                        color = pyautogui.pixel(x, y)
+                        test = False
+                    except:
+                        pass
+                if color == (46, 54, 61):
+                    print("got ya")
+                    return x, y
+    
+    def attack(self, x, y):
+        pass
 
+    def check_aggression(self):
+        for x in range (384, 1920, 384):
+            for y in range(270, 1080, 270):
+                test = True
+                while test:
+                    try:
+                        battle_color = pyautogui.pixel(x, y)
+                        print(battle_color)
+                        if ( # le mode cellule n'a pas toujours lemême code couleur, à compléter si de nouveaux trouvé
+                            battle_color == (199, 197, 102) or battle_color == (185, 183, 89) or 
+                            battle_color ==  (138, 93, 40) or battle_color == (148, 103, 50) or
+                            battle_color == (154, 144, 85) or battle_color == (164, 154, 94) or
+                            battle_color == (167, 160, 137) or battle_color == (158, 150, 127)     
+                        ):
+                            # ou couleur case rouge ou bleu ou cas où
+                            return True
+                        else:
+                            print("rien détecté")
+                        test=False
+                    except Exception as e:
+                        print(e)
+        return False
+    
+    def fight(self):
+        """
+        Vous devez activer les raccourcis US
+        """
+        pyautogui.press('f1') # raccourci prêt 
+        in_fight = True
+        while in_fight:
+            # if couleur c'est mon tour alors fight sinon tu fais rien
+            try:
+                color = pyautogui.pixel(874, 1063)
+                if color == (252, 200, 0) or color == (255, 91, 61): # orange / rouge
+                    # time.sleep(1)
+                    # pyautogui.press('num1') # spell num1 to num0 then ctrl+num1 to ctrl+num0
+                    # time.sleep(1)
+                    # pyautogui.click(1818, 111)
+                    time.sleep(1)
+                    pyautogui.press('num1')
+                    time.sleep(1)
+                    pyautogui.click(1753, 108)
+                    # x1
+                    time.sleep(1)
+                    pyautogui.press('num1')
+                    time.sleep(1)
+                    pyautogui.click(1753, 108)
+                    # x2
+                    time.sleep(1)
+                    pyautogui.press('num1')
+                    time.sleep(1)
+                    pyautogui.click(1753, 108)
+                    # x3
+                    time.sleep(1)
+                    pyautogui.click(874, 1063)
+                    time.sleep(1)
+                    combat.check_aggression()
+                    time.sleep(5)
+                if combat.check_aggression() == True:
+                    pyautogui.press('f1')
+                else:
+                    in_fight = False
+            except Exception as e:
+                print(e)
 class mine(object):
     def __init__(self):
         pass
@@ -48,11 +149,6 @@ class mine(object):
     def miner(self):
         print("Je ne connais pas encore cette mine")
 
-    def combattre(self):
-        pass
-        # (0, 0, 0)
-        # (154, 144, 85)
-        # (164, 154, 94)
     def can_recolt(self): # peut-être résolvable avec un time.sleep()
         fuck = True
         while fuck:
@@ -172,6 +268,8 @@ class astrub(mine):
             for Ore in mine.getOreList(metier_level): # pour toutes les ressouces récoltables (par ordre de niveau)
                 if Ore in self.availableOre: # les récolter par priorité
                     astrub.take_resources(room, Ore) # clique pour récolter
+                    if combat.check_aggression() == True:
+                        combat.fight()
                     
             if room == [261, 979]:
                 astrub.check_pods()
@@ -202,7 +300,6 @@ class astrub(mine):
                 check = False
             except:
                 pass
-            
 
     def go_bank(self):
         print("ressources déposé")
@@ -244,38 +341,47 @@ class astrub(mine):
 
         elif room == [1617, 389]:
             pass
+
         elif room == [1043, 168] or room == [1623, 903]:
             mine.decision((763, 754), (157, 134, 63))
             mine.decision((1233, 591), (34, 26, 11))
+
         elif room == [300, 715]:
             pass
+
         elif room == [1288, 37] or room == [795, 945]:
             mine.decision((1228, 526), (110, 97, 55))
             mine.decision((1175, 560), (96, 87, 55))
             mine.decision((538, 395),(115, 113, 80))
             mine.decision((1060, 229), (86, 77, 49))
             mine.decision((1108, 188), (72, 73, 55))
+
         elif room == [1763, 540]:
             pass
+
         elif room == [1457, 949] or room == [795, 945]:
             mine.decision((829, 143), (131, 127, 22))
+
         elif room == [1648, 422]:
             mine.decision((424, 328), (144, 142, 104))
             mine.decision((616, 267), (204, 198, 144))
             mine.decision((665, 294), (122, 120, 88))
             mine.decision((714, 309), (182, 179, 126))
             mine.decision((731, 574), (114, 110, 86))
+
         elif room == [1646, 531]:
             mine.decision((1296, 385), (113, 107, 86))
             mine.decision((1546, 453), (199, 190, 140))
             mine.decision((616, 444), (185, 182, 133))
             mine.decision((947, 347), (200, 192, 140))
+
         elif room == [1152, 567] or room == [336, 844]:
             mine.decision((392, 618), (64, 55, 27))
             mine.decision((637, 508), (33, 28, 15))
             mine.decision((683, 461), (39, 33, 18))
             mine.decision((1021, 303), (23, 20, 10))
             mine.decision((1306, 443) , (70, 57, 1))
+
         elif room == [1604, 295] or room == [380, 293]:
             mine.decision((506, 424), (95, 77, 37))
             mine.decision((646, 335), (43, 35, 19))
@@ -284,24 +390,28 @@ class astrub(mine):
             mine.decision((1270, 159), (15, 18, 6))
             mine.decision((1421, 311), (25, 27, 4))
             mine.decision((1091, 524), (67, 56, 0))
+
         elif room == [1518, 689]:
             mine.decision((1009, 183), (57, 43, 11))
             mine.decision((674, 502), (12, 9, 2)) 
             mine.decision((919, 450), (102, 96, 4))
             
-
     def take_cuivre(self, room):
         if room == [1340, 370] or room == [365, 851]:
             mine.decision((340, 543), (151, 122, 39))
             mine.decision((608, 474), (72, 57, 20))
+
         elif room == [1470, 250] or room == [597, 945] or room == [335, 805]:
             mine.decision((800, 602), (63, 52, 24))
+
         elif room == [1617, 389]:
             mine.decision((926, 155), (88, 66, 20))
             mine.decision((866, 133), (95, 78, 38))
+
         elif room == [1043, 168] or room == [1623, 903]:
             mine.decision((1163, 297), (68, 58, 30))
             mine.decision((1171, 596), (33, 26, 12))
+
         elif room == [725, 137]:
             mine.decision((1028, 337), (157, 136, 70))
             mine.decision((1080, 351), (147, 128, 64))
@@ -313,20 +423,25 @@ class astrub(mine):
         elif room == [1288, 37] or room == [795, 945]:
             mine.decision((596, 374), (124, 124, 90))
             mine.decision((1161, 178), (85, 85, 63))
+
         elif room == [1648, 422]:
             mine.decision((519, 278), (136, 134, 98))
             mine.decision((757, 342), (191, 182, 132))
+
         elif room == [1646, 531]:
             mine.decision((1499, 433), (198, 189, 141))
         
         elif room == [1152, 567] or room == [336, 844]:
             mine.decision((479, 646), (42, 34, 17))
             mine.decision((978, 362), (35, 30, 14))
+
         elif room == [1604, 295] or room == [380, 293]:
             mine.decision((464, 409), (90, 71, 36))
+
         elif room == [1518, 689]:
             mine.decision((1047, 260), (44, 35, 14))
             mine.decision((1291, 384), (45, 35, 11))
+
         elif room == [1728, 247]:
             mine.decision((1407, 420) ,  (87, 86, 63))
             mine.decision((1142, 284), (80, 76, 58))
@@ -335,25 +450,33 @@ class astrub(mine):
     def take_bronze(self, room):
         if room == [1340, 370] or room == [365, 851]:
             mine.decision((1483, 662), (50, 40, 17))
+
         elif room == [1470, 250] or room == [597, 945] or room == [335, 805]:
             mine.decision((618, 353), (92, 83, 40))
             mine.decision((673, 326), (79, 60, 17))
+
         elif room == [1288, 37] or room == [795, 945]:
             mine.decision((998, 234), (87, 86, 68))
+
         elif room == [1648, 422]:
             mine.decision((1063, 756), (160, 156, 122))
             mine.decision((1108, 776), (168, 164, 121))
+
         elif room == [1646, 531]:
             mine.decision((1085, 571), (191, 182, 140))
+
         elif room == [1152, 567] or room == [336, 844]:
             mine.decision((1127, 231), (22, 18, 9))
+
         elif room == [1604, 295] or room == [380, 293]:
             mine.decision((607, 403), (63, 48, 26))
             mine.decision((1161, 495), (31, 28, 0))
+
         elif room == [1728, 247]:
             mine.decision((646, 417), (113, 110, 78))
             mine.decision((682, 398), (120, 118, 85))
             mine.decision((731, 364), (110, 107, 76))
+
         elif room == [1568, 257]:
             mine.decision((819, 127), (173, 164, 123))
             mine.decision((862, 147), (148, 140, 104)) 
@@ -365,17 +488,6 @@ class astrub(mine):
 
         elif room == [1648, 422]:
             mine.decision((1404, 803), (92, 90, 69))
-
-class combat(object):
-    """
-    Le script doit être capable de gérer les combats contre les épouvantails.
-    Pour détecter s'il est en combat, il se réfère au pixel de couleur du mode combat.
-    Fait un test en ligne à partir du milieu de la carte (en diagonal)
-        ex : 500, 500 et 505, 500, et 510, 500, etc.
-    Si plusieurs d'entre eux sont bien la couleur recherché, alors on est bien en combat
-    """
-    def __init__(self):
-        pass
 
 class attrapé(object):
     """
@@ -390,9 +502,19 @@ class attrapé(object):
 if __name__ == "__main__":
     developing = False
     if developing == True:
-        mine = mine()        
+        mine = mine()
+        combat = combat()        
         while developing:
-            mine.make_decision()
+            x, y = combat.find_enemies()
+            combat.attack(x, y)
+            # écran dofus : (300, 30) sur (1620, 965)
+            # dimension des cases (+45, +20)
+            # pyautogui.click(345, 50)  # milieu première case
+            #                   
+            # pyautogui.click(390, 70)  # 390, 70 # milieu diagonal (+45, +20)
+            # mine.make_decision()
+            # if combat.check_aggression() == True:
+            #     combat.fight()
 
     metier_level = eval(input("Donne-moi le niveau de ton métier : "))
     aller_retour = eval(input("Donne-moi le nombre d'aller-retour à effecter : "))
@@ -402,6 +524,7 @@ if __name__ == "__main__":
 
     mine = mine()
     astrub = astrub()
+    combat = combat() 
 
     récolter = True
     
@@ -409,3 +532,14 @@ if __name__ == "__main__":
         astrub.miner()
         aller_retour-=1
         print(aller_retour, "aller-retour restant")
+
+#                       (936, 187)
+#           (891, 209)              (981, 208)
+#                       (938, 231)
+
+
+# x : 936 et 938 (187 | 231) => env 44
+# y : 208 et 209 (891 <-> 981) => env 90
+
+
+# dernière pos (1620, 965)
