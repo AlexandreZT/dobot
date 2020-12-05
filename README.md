@@ -15,5 +15,5 @@ module : pyautogui
 
 ## TODO :
 ### Le passage à la banque est encore à faire
-### Une version plus rapide (et donc plus intelligente) en évitantles time.sleep()
+### Une version plus rapide (et donc plus intelligente) en évitant les time.sleep()
 ### Gestion des combats
