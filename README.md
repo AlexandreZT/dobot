@@ -13,7 +13,7 @@ D'autres mines pourront seront peut-être développé.
 
 module : pyautogui
 
-## TODO :
-### Le passage à la banque est encore à faire
-### Une version plus rapide (et donc plus intelligente) en évitantles time.sleep()
-### Gestion des combats
+#### TODO :
+##### Le passage à la banque est encore à faire
+##### Une version plus rapide est faisable (plus intelligente => en remplaçant les time.sleep())
+##### Gestion des combats
