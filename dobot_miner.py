@@ -48,23 +48,23 @@ class mine(object):
         print("Je ne connais pas encore cette mine")
 
     def can_recolt(self): # peut-être résolvable avec un time.sleep()
-        fuck = True
+        force = True
         while fuck:
             try:
                 x, y = pyautogui.position()
                 color = pyautogui.pixel(x, y)
-                fuck = False
+                force = False
             except:
                 pass
         return color
     
     def dev_can_recolt(self): # peut-être résolvable avec un time.sleep()
-        fuck = True
+        force = True
         while fuck:
             try:
                 x, y = pyautogui.position()
                 print(pyautogui.pixel(x, y))
-                fuck = False
+                force = False
             except:
                 pass
     
@@ -88,11 +88,11 @@ class mine(object):
         time.sleep(2)
         x, y = pyautogui.position()
         time.sleep(1)
-        loop = True
+        force = True
         while loop:
             try:
                 print((x, y),", ", pyautogui.pixel(x, y))
-                loop =  False
+                force =  False
             except:
                 pass
 
